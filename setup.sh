@@ -21,8 +21,8 @@ fi
 # Ensure nginx includes confs
 echo "Ensure nginx includes confs"
 echo "Editor will open to edit /etc/nginx/nginx.conf, make sure there's an 'include include/*.conf' clause in the http section."
-pause
-nano /etc/nginx/
+read
+nano /etc/nginx/nginx.conf
 
 # Setup generic services
 echo "Setup generic services"
@@ -39,13 +39,13 @@ for s in services/*; do
     fi
 
     groupadd $g
-    if [ ! -z $? ]; then
+    if [ "$?" == "9" ]; then
         echo "Group '$g' already exists, skipping setup"
         continue
     fi
 
     useradd -m -g $g $g
-    if [ ! -z $? ]; then
+    if [ "$?" == "9" ]; then
         echo "User '$g' already exists, skipping setup"
         continue
     fi
@@ -56,6 +56,13 @@ for s in services/*; do
 
     if [ -f "$s/setup.sh" ]; then
         echo "Running file '"$s/setup.sh"'"
-        "$s/setup.sh"
+        _cd=$(pwd)
+        cd "$s"
+        source setup.sh
+        cd $_cd
     fi
+
+    systemctl enable "$g"
 done
+
+nginx -t && nginx -s reload

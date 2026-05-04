@@ -1,9 +1,21 @@
 #!/bin/bash
 
-echo "Creating '/home/wiki/wiki' directory"
+echo "Adding "wiki" to group 'docker'"
 
-mkdir /home/wiki/wiki
-chown wiki:wiki /home/wiki/wiki
+usermod -aG docker wiki
+
+echo "Import Nginx configuration"
 
 cp wiki.conf /etc/nginx/include/wiki.conf
-touch /home/wiki/wiki/wiki.db
+
+echo "Moving compose file to home"
+cp compose.yml /home/wiki
+
+echo "Creating '/home/wiki/data' directory and contents"
+mkdir /home/wiki/data
+touch /home/wiki/data/wiki.db
+
+echo "Ensuring correct rights"
+chmod 744 -R /home/wiki
+chown wiki:wiki -R /home/wiki
+chmod 777 -R /home/wiki/data/
