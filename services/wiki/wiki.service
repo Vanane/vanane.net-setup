@@ -1,0 +1,22 @@
+[Unit]
+Description=Vanane Wiki
+After=docker.service
+Requires=docker.service
+
+[Service]
+User=wiki
+Group=wiki
+Type=simple
+Restart=always
+RestartSec=5
+ExecStartPre=/usr/bin/docker rm -f wiki
+ExecStart=/usr/bin/docker run --rm --name wiki -p 44322:3000 -v /home/docker/wiki:/var/wiki -e "DB_TYPE=sqlite" -e "DB_FILEPATH=/var/wiki/wiki.db" requarks/wiki
+ExecStop=/usr/bin/docker stop wiki
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+
+

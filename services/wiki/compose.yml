@@ -1,0 +1,12 @@
+services:
+    wiki:
+        image: requarks/wiki
+        init: true
+        environment:
+            DB_TYPE: sqlite
+            DB_FILEPATH: /var/wiki/wiki.db
+        restart: unless-stopped
+        volumes:
+        - /home/wiki/wiki:/var/wiki
+        ports:
+            - 44322:3000
