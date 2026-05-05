@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "----Wiki Sdditional Setup----"
+
 echo "Adding "wiki" to group 'docker'"
 
 usermod -aG docker wiki
@@ -19,3 +21,7 @@ echo "Ensuring correct rights"
 chmod 744 -R /home/wiki
 chown wiki:wiki -R /home/wiki
 chmod 777 -R /home/wiki/data/
+
+echo "Fetching certificates to add to the image"
+mkdir certs
+cp /var/certs/* certs/
